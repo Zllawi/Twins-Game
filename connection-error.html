@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطأ في الاتصال | لعبة المافيا</title>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #161b33;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #1f2642;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #e94057;
+            border-bottom: 2px solid #e94057;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .error-box {
+            background-color: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid #e94057;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .solution {
+            background-color: rgba(0, 255, 0, 0.1);
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        code {
+            background-color: #333;
+            padding: 3px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        button {
+            background-color: #e94057;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #d13a4e;
+        }
+        a {
+            color: #e94057;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .console-img {
+            max-width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>خطأ في الاتصال بقاعدة بيانات Firebase</h1>
+        
+        <div class="error-box">
+            <h2>ما المشكلة؟</h2>
+            <p>تم رصد خطأ في الاتصال بقاعدة بيانات Firebase، وهذا يمنع عمل اللعبة بشكل صحيح. عادةً ما تكون هذه المشكلة متعلقة بأحد الأسباب التالية:</p>
+            <ul>
+                <li>رابط موقع اللعبة غير مضاف إلى المجالات المصرح بها في Firebase</li>
+                <li>قواعد الأمان في قاعدة البيانات لا تسمح بالوصول</li>
+                <li>مشكلة CORS (Cross-Origin Resource Sharing)</li>
+                <li>خطأ في تكوين Firebase</li>
+            </ul>
+        </div>
+        
+        <div class="solution">
+            <h2>كيف يمكن إصلاح المشكلة؟</h2>
+            <p>إذا كنت تستخدم اللعبة، يرجى التواصل مع مطور اللعبة وإرسال المعلومات التالية:</p>
+            <ol>
+                <li>لقطة شاشة للخطأ من وحدة تحكم المتصفح (F12 ثم Console)</li>
+                <li>الرابط الذي تستخدمه للوصول إلى اللعبة</li>
+                <li>نوع المتصفح وإصداره</li>
+            </ol>
+            
+            <p>إذا كنت مطور اللعبة، يرجى اتباع الخطوات في ملف <a href="GITHUB_DEPLOYMENT_FIX.md">GITHUB_DEPLOYMENT_FIX.md</a> لإصلاح المشكلة.</p>
+        </div>
+        
+        <h2>كيف أتحقق من المشكلة بنفسي؟</h2>
+        <p>يمكنك استخدام أداة التشخيص للتأكد من الاتصال بقاعدة البيانات:</p>
+        <button onclick="window.location.href='debug-test.html'">فتح أداة التشخيص</button>
+        
+        <h2>أو العودة إلى الصفحة الرئيسية</h2>
+        <button onclick="window.location.href='index.html'" style="background-color: #333;">العودة للصفحة الرئيسية</button>
+    </div>
+    
+    <script>
+        // محاولة لتحديد سبب المشكلة
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("الكشف عن أخطاء الاتصال...");
+            
+            // التحقق من إمكانية الوصول للـ Firebase
+            if (typeof firebase === 'undefined') {
+                console.error("مكتبة Firebase غير محملة");
+                document.querySelector('.error-box').innerHTML += `
+                    <p style="color: #ff6b6b; font-weight: bold;">تشخيص: مكتبة Firebase غير محملة!</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار Firebase</title>
+    <!-- إضافة مكتبات Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script>
+        console.log("بدء تحميل الصفحة");
+        
+        // طباعة معلومات المتصفح للتشخيص
+        console.log("معلومات المتصفح:", navigator.userAgent);
+    </script>
+    <script src="firebase-config.js"></script>
+    <style>
+        body {
+            background-color: #161b33;
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .error {
+            background-color: #f44336;
+            color: white;
+        }
+        pre {
+            background-color: #1a2040;
+            padding: 15px;
+            border-radius: 5px;
+            overflow: auto;
+            text-align: left;
+            direction: ltr;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        button {
+            background-color: #e94057;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #d13a4e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>اختبار اتصال Firebase</h1>
+        <button id="testBtn">اختبار الاتصال</button>
+        <button id="showConfigBtn">عرض التكوين</button>
+        <div id="status" class="status"></div>
+        <div id="configArea" style="display: none;">
+            <h3>تكوين Firebase:</h3>
+            <pre id="configContent"></pre>
+        </div>
+    </div>
+
+    <script>
+        console.log("بدء تنفيذ السكريبت");
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("تم تحميل المستند");
+            
+            try {
+                // التحقق من تهيئة Firebase
+                console.log("حالة Firebase:", firebase ? "موجود" : "غير موجود");
+                console.log("حالة تكوين Firebase:", firebaseConfig ? "موجود" : "غير موجود");
+                
+                // طباعة معلومات التكوين (بدون apiKey للأمان)
+                const safeConfig = { ...firebaseConfig };
+                if (safeConfig.apiKey) safeConfig.apiKey = "***مخفي***";
+                console.log("تكوين Firebase:", safeConfig);
+                
+                // طباعة حالة قاعدة البيانات
+                console.log("حالة قاعدة البيانات:", database ? "موجودة" : "غير موجودة");
+            } catch (error) {
+                console.error("خطأ في تهيئة Firebase:", error);
+            }
+            
+            const testBtn = document.getElementById('testBtn');
+            const showConfigBtn = document.getElementById('showConfigBtn');
+            const statusDiv = document.getElementById('status');
+            const configArea = document.getElementById('configArea');
+            const configContent = document.getElementById('configContent');
+            
+            showConfigBtn.addEventListener('click', function() {
+                try {
+                    // عرض معلومات التكوين (بدون apiKey للأمان)
+                    const safeConfig = { ...firebaseConfig };
+                    if (safeConfig.apiKey) safeConfig.apiKey = "***مخفي***";
+                    
+                    configContent.textContent = JSON.stringify(safeConfig, null, 2);
+                    configArea.style.display = 'block';
+                } catch (error) {
+                    configContent.textContent = "خطأ في عرض التكوين: " + error.message;
+                    configArea.style.display = 'block';
+                }
+            });
+            
+            testBtn.addEventListener('click', function() {
+                statusDiv.innerHTML = "جاري الاختبار...";
+                statusDiv.className = "status";
+                
+                try {
+                    console.log("بدء اختبار الاتصال");
+                    
+                    // التحقق من وجود Firebase
+                    if (!firebase) {
+                        throw new Error("لم يتم العثور على كائن Firebase");
+                    }
+                    
+                    // التحقق من وجود قاعدة البيانات
+                    if (!database) {
+                        throw new Error("لم يتم العثور على كائن قاعدة البيانات");
+                    }
+                    
+                    // محاولة كتابة بيانات اختبار
+                    console.log("محاولة الكتابة إلى قاعدة البيانات");
+                    const testRef = database.ref("connection_test");
+                    const timestamp = new Date().getTime();
+                    
+                    testRef.set({
+                        timestamp: timestamp,
+                        message: "تم الاتصال بنجاح"
+                    })
+                    .then(() => {
+                        console.log("تمت الكتابة بنجاح");
+                        
+                        // قراءة البيانات للتأكد من نجاح الكتابة
+                        return testRef.once('value');
+                    })
+                    .then((snapshot) => {
+                        console.log("تمت القراءة بنجاح:", snapshot.val());
+                        
+                        const data = snapshot.val();
+                        if (data && data.timestamp === timestamp) {
+                            statusDiv.className = "status success";
+                            statusDiv.innerHTML = "تم الاتصال بنجاح بقاعدة بيانات Firebase! <br>القراءة والكتابة تعمل بشكل صحيح.";
+                        } else {
+                            throw new Error("فشل في قراءة البيانات");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("خطأ في عملية قاعدة البيانات:", error);
+                        statusDiv.className = "status error";
+                        statusDiv.innerHTML = "حدث خطأ: " + error.message + "<br>" + 
+                                             "ملاحظة: تأكد من أن قواعد الأمان في Firebase تسمح بالقراءة والكتابة.";
+                    });
+                } catch (error) {
+                    console.error("خطأ في اختبار الاتصال:", error);
+                    statusDiv.className = "status error";
+                    statusDiv.innerHTML = "حدث خطأ: " + error.message;
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

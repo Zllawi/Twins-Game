@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>اختبار Firebase البسيط</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>اختبار Firebase البسيط</h1>
+    <button id="testButton">اختبار الاتصال</button>
+    <div id="result" class="result">النتيجة ستظهر هنا</div>
+
+    <script>
+        document.getElementById('testButton').addEventListener('click', function() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = "جاري الاختبار...";
+            
+            // تكوين Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyD2o_-ZKbJBVu4Dsr0rVfGQdtYNPJrOuHs",
+                authDomain: "mafia-game-zlawi.firebaseapp.com",
+                projectId: "mafia-game-zlawi",
+                storageBucket: "mafia-game-zlawi.appspot.com",
+                messagingSenderId: "825997210461",
+                databaseURL: "https://mafia-game-zlawi-default-rtdb.firebaseio.com",
+                appId: "1:825997210461:web:64c97992a5c8b7b9a51f88"
+            };
+
+            try {
+                // تهيئة Firebase
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                // الحصول على مرجع قاعدة البيانات
+                const db = firebase.database();
+                
+                // كتابة بيانات اختبار
+                const testRef = db.ref('test_connection');
+                const timestamp = new Date().getTime();
+                
+                testRef.set({
+                    timestamp: timestamp,
+                    message: "اختبار ناجح"
+                })
+                .then(() => {
+                    // قراءة البيانات مرة أخرى
+                    return testRef.once('value');
+                })
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    resultDiv.innerHTML = "تم الاتصال بنجاح!<br>البيانات: " + 
+                                         JSON.stringify(data);
+                })
+                .catch((error) => {
+                    resultDiv.innerHTML = "حدث خطأ: " + error.message;
+                    console.error("خطأ:", error);
+                });
+                
+            } catch (error) {
+                resultDiv.innerHTML = "حدث خطأ: " + error.message;
+                console.error("خطأ:", error);
+            }
+        });
+    </script>
+</body>
+</html> 

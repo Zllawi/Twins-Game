@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>روابط لوحة تحكم Firebase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #e94057;
+            border-bottom: 2px solid #e94057;
+            padding-bottom: 10px;
+        }
+        .link-box {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        a {
+            display: inline-block;
+            background-color: #e94057;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        a:hover {
+            background-color: #d13a4e;
+        }
+        p {
+            color: #666;
+            line-height: 1.5;
+        }
+        .note {
+            background-color: #ffffdd;
+            border-left: 4px solid #ffcc00;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>روابط مفيدة للوصول إلى Firebase</h1>
+    
+    <div class="link-box">
+        <h2>الصفحة الرئيسية للوحة تحكم Firebase</h2>
+        <p>انقر على الرابط التالي للانتقال إلى الصفحة الرئيسية للوحة تحكم Firebase حيث يمكنك رؤية جميع مشاريعك.</p>
+        <a href="https://console.firebase.google.com/" target="_blank">فتح لوحة تحكم Firebase</a>
+    </div>
+    
+    <div class="link-box">
+        <h2>الوصول المباشر إلى مشروع "mafia-game-zlawi"</h2>
+        <p>انقر على الرابط التالي للانتقال مباشرة إلى مشروع لعبة المافيا الخاص بك.</p>
+        <a href="https://console.firebase.google.com/project/mafia-game-zlawi/overview" target="_blank">فتح مشروع لعبة المافيا</a>
+    </div>
+    
+    <div class="link-box">
+        <h2>إعدادات قاعدة البيانات Realtime Database</h2>
+        <p>انقر على الرابط التالي للانتقال مباشرة إلى قاعدة بيانات Realtime Database الخاصة بمشروعك.</p>
+        <a href="https://console.firebase.google.com/project/mafia-game-zlawi/database" target="_blank">فتح قاعدة البيانات</a>
+    </div>
+    
+    <div class="link-box">
+        <h2>قواعد الأمان لقاعدة البيانات</h2>
+        <p>انقر على الرابط التالي للوصول مباشرة إلى قواعد الأمان في قاعدة البيانات.</p>
+        <a href="https://console.firebase.google.com/project/mafia-game-zlawi/database/rules" target="_blank">تعديل قواعد الأمان</a>
+    </div>
+    
+    <div class="note">
+        <strong>ملاحظة:</strong> إذا طلب منك تسجيل الدخول، فاستخدم نفس حساب Google الذي أنشأت به مشروع Firebase.
+    </div>
+    
+    <div class="link-box">
+        <h2>ضبط قواعد الأمان للتجربة</h2>
+        <p>نسخ قواعد الأمان التالية ولصقها في صفحة قواعد الأمان في Firebase:</p>
+        <pre style="background: #f0f0f0; padding: 10px; overflow-x: auto; border-radius: 5px;">
+{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
+        </pre>
+        <p><strong>تنبيه:</strong> هذه القواعد مفتوحة تماماً لأغراض التجربة فقط. لا تستخدمها في الإنتاج.</p>
+    </div>
+</body>
+</html> 

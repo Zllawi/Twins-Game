@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار Firebase المباشر</title>
+    <!-- إضافة مكتبات Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <style>
+        body {
+            background-color: #161b33;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .error {
+            background-color: #f44336;
+            color: white;
+        }
+        button {
+            background-color: #e94057;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #d13a4e;
+        }
+        .debug {
+            margin-top: 20px;
+            text-align: left;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>اختبار اتصال Firebase المباشر</h1>
+        <p>هذا الاختبار يستخدم تكوين مشروع zllawi-game</p>
+        <button id="testBtn">اختبار الاتصال</button>
+        <div id="status" class="status"></div>
+        <div id="debug" class="debug"></div>
+    </div>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', function() {
+            const statusDiv = document.getElementById('status');
+            const debugDiv = document.getElementById('debug');
+            statusDiv.textContent = "جاري الاختبار...";
+            statusDiv.className = "status";
+            
+            // تكوين Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyCv5d-8DJbJ2YknSzn3mKIIkwUcSHuabb0",
+                authDomain: "zllawi-game.firebaseapp.com",
+                databaseURL: "https://zllawi-game-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "zllawi-game",
+                storageBucket: "zllawi-game.firebasestorage.app",
+                messagingSenderId: "799121556211",
+                appId: "1:799121556211:web:d83819665cd646a243ed86",
+                measurementId: "G-YY4S0ECENF"
+            };
+            
+            // إضافة معلومات التشخيص
+            debugDiv.textContent = "بدء الاختبار...\n";
+            debugDiv.textContent += "تكوين Firebase: " + JSON.stringify(firebaseConfig, null, 2) + "\n";
+            
+            try {
+                // تهيئة Firebase
+                debugDiv.textContent += "محاولة تهيئة Firebase...\n";
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                    debugDiv.textContent += "تم تهيئة Firebase لأول مرة\n";
+                } else {
+                    firebase.app();
+                    debugDiv.textContent += "تم استخدام تطبيق Firebase الحالي\n";
+                }
+                
+                // الحصول على مرجع قاعدة البيانات
+                debugDiv.textContent += "محاولة الوصول إلى قاعدة البيانات...\n";
+                const database = firebase.database();
+                
+                // إنشاء معرّف عشوائي للاختبار
+                const testId = 'test_' + Math.random().toString(36).substring(2, 9);
+                
+                // محاولة كتابة بيانات اختبار
+                debugDiv.textContent += "محاولة كتابة بيانات اختبار...\n";
+                const testRef = database.ref("direct_connection_test");
+                const timestamp = new Date().getTime();
+                
+                testRef.set({
+                    id: testId,
+                    timestamp: timestamp,
+                    message: "تم الاتصال بنجاح"
+                })
+                .then(() => {
+                    // قراءة البيانات للتأكد من نجاح الكتابة
+                    debugDiv.textContent += "تمت الكتابة بنجاح. محاولة قراءة البيانات...\n";
+                    return testRef.once('value');
+                })
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    debugDiv.textContent += "تمت قراءة البيانات: " + JSON.stringify(data) + "\n";
+                    
+                    if (data && data.timestamp === timestamp) {
+                        statusDiv.className = "status success";
+                        statusDiv.innerHTML = "تم الاتصال بنجاح بقاعدة بيانات Firebase! <br>" +
+                                             "القراءة والكتابة تعمل بشكل صحيح. <br>" +
+                                             "ID: " + testId;
+                        debugDiv.textContent += "تم التحقق من البيانات بنجاح!\n";
+                    } else {
+                        throw new Error("فشل في قراءة البيانات المكتوبة");
+                    }
+                })
+                .catch((error) => {
+                    statusDiv.className = "status error";
+                    statusDiv.innerHTML = "حدث خطأ: " + error.message + "<br>" + 
+                                         "تأكد من أن قواعد الأمان في قاعدة البيانات تسمح بالقراءة والكتابة.";
+                    debugDiv.textContent += "حدث خطأ: " + error.message + "\n";
+                    debugDiv.textContent += "تفاصيل الخطأ: " + JSON.stringify(error) + "\n";
+                    console.error("Error:", error);
+                });
+            } catch (error) {
+                statusDiv.className = "status error";
+                statusDiv.innerHTML = "حدث خطأ: " + error.message;
+                debugDiv.textContent += "استثناء: " + error.message + "\n";
+                debugDiv.textContent += "تفاصيل الاستثناء: " + JSON.stringify(error) + "\n";
+                console.error("Error:", error);
+            }
+        });
+    </script>
+</body>
+</html> 
